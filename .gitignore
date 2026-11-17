@@ -1,0 +1,16 @@
+xcuserdata/
+
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+*.xcodeproj/
+.build/
+DerivedData/
+
+Packages/
+Package.pins
+Package.resolved
+
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
