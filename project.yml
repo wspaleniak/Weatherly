@@ -5,12 +5,19 @@ settings:
     DEVELOPMENT_TEAM: N9SPXNXF4B
     SWIFT_VERSION: 6.0
     IPHONEOS_DEPLOYMENT_TARGET: 17.0
+packages:
+  Factory:
+    url: https://github.com/hmlongco/Factory.git
+    from: 3.5.0
 targets:
   Weatherly:
     type: application
     platform: iOS
     sources:
       - path: Weatherly
+    dependencies:
+      - package: Factory
+        product: FactoryKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: pl.wspaleniak.Weatherly
