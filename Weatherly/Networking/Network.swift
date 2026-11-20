@@ -7,4 +7,6 @@
 
 import Foundation
 
+/// A namespace for the app's networking types, including its HTTP client,
+/// API service, and response decoding models.
 enum Network { }
