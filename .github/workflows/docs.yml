@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Configure GitHub Pages
+        id: pages
         uses: actions/configure-pages@v6
 
       - name: Install XcodeGen
@@ -32,6 +33,7 @@ jobs:
         env:
           DERIVED_DATA: ${{ runner.temp }}/WeatherlyDerivedData
           SITE_DIR: ${{ runner.temp }}/WeatherlySite
+          DOCS_BASE_PATH: ${{ steps.pages.outputs.base_path }}
         run: |
           xcodebuild docbuild \
             -project Weatherly.xcodeproj \
@@ -51,7 +53,22 @@ jobs:
           xcrun docc process-archive transform-for-static-hosting \
             "$ARCHIVE_PATH" \
             --output-path "$SITE_DIR" \
-            --hosting-base-path /Weatherly
+            --hosting-base-path "$DOCS_BASE_PATH"
+
+          cat > "$SITE_DIR/index.html" <<EOF
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0; url=${DOCS_BASE_PATH}/documentation/weatherly">
+            <title>Weatherly documentation</title>
+          </head>
+          <body>
+            <p><a href="${DOCS_BASE_PATH}/documentation/weatherly">Open Weatherly documentation</a></p>
+            <script>window.location.replace("${DOCS_BASE_PATH}/documentation/weatherly");</script>
+          </body>
+          </html>
+          EOF
 
       - name: Upload documentation
         uses: actions/upload-pages-artifact@v5
