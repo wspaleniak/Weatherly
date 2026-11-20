@@ -130,15 +130,19 @@ extension Network {
             return request
         }
         
-        /// Executes a request using the shared URL session.
+        /// Executes a request using the supplied URL session.
+        ///
+        /// If no session is supplied, this method uses `URLSession.shared`.
         /// - Parameter request: The request to execute.
+        /// - Parameter session: The session used to execute the request. Defaults to the shared session.
         /// - Returns: The response body and the corresponding URL response.
         /// - Throws: `HTTPError.downloading` if the request fails.
         static func data(
-            for request: URLRequest
+            for request: URLRequest,
+            using session: URLSession = .shared
         ) async throws(HTTPError) -> (data: Data, response: URLResponse) {
             do {
-                return try await URLSession.shared.data(for: request)
+                return try await session.data(for: request)
             } catch {
                 throw .downloading(message: error.localizedDescription)
             }

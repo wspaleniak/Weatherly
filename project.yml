@@ -35,4 +35,28 @@ targets:
         ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
         ENABLE_USER_SCRIPT_SANDBOXING: YES
         STRING_CATALOG_GENERATE_SYMBOLS: YES
+  WeatherlyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: WeatherlyTests
+    dependencies:
+      - target: Weatherly
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: pl.wspaleniak.WeatherlyTests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: 1
+        SUPPORTED_PLATFORMS: iphoneos iphonesimulator
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+schemes:
+  Weatherly:
+    build:
+      targets:
+        Weatherly: all
+    test:
+      targets:
+        - WeatherlyTests
         

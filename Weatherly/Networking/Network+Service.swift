@@ -32,6 +32,15 @@ extension Network {
 
     /// Performs location searches and retrieves weather forecasts from Open-Meteo.
     struct Service: Providing {
+        private let session: URLSession
+
+        /// Creates the service with the URL session used for requests.
+        ///
+        /// - Parameter session: The session used to execute requests. Defaults to `URLSession.shared`.
+        init(session: URLSession = .shared) {
+            self.session = session
+        }
+
         /// Searches for cities matching the supplied name.
         ///
         /// The search term is trimmed before the Geocoding API request. Results are
@@ -56,7 +65,7 @@ extension Network {
                 queryItems: queryItems
             )
             let request = HTTPClient.makeRequest(for: url)
-            let (data, response) = try await HTTPClient.data(for: request)
+            let (data, response) = try await HTTPClient.data(for: request, using: session)
             try HTTPClient.handle(data: data, response: response)
             let search = try HTTPClient.decode(data, as: Decoding.Search.self)
             
@@ -91,7 +100,7 @@ extension Network {
                 queryItems: queryItems
             )
             let request = HTTPClient.makeRequest(for: url)
-            let (data, response) = try await HTTPClient.data(for: request)
+            let (data, response) = try await HTTPClient.data(for: request, using: session)
             try HTTPClient.handle(data: data, response: response)
 
             let weather = try HTTPClient.decode(data, as: Decoding.Weather.self)
