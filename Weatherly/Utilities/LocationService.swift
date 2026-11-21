@@ -119,7 +119,9 @@ extension LocationService: CLLocationManagerDelegate {
     /// main actor, where the location manager and stream state are managed.
     ///
     /// - Parameter manager: The location manager reporting the authorization change.
-    nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    nonisolated func locationManagerDidChangeAuthorization(
+        _ manager: CLLocationManager
+    ) {
         let status = manager.authorizationStatus
         
         Task { @MainActor [weak self] in
@@ -132,7 +134,10 @@ extension LocationService: CLLocationManagerDelegate {
     /// - Parameters:
     ///   - manager: The location manager reporting the update.
     ///   - locations: The locations received in this delegate callback.
-    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    nonisolated func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
         guard let newLocation = locations.last else {
             return
         }
@@ -149,7 +154,10 @@ extension LocationService: CLLocationManagerDelegate {
     /// - Parameters:
     ///   - manager: The location manager reporting the failure.
     ///   - error: The error reported by Core Location.
-    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
+    nonisolated func locationManager(
+        _ manager: CLLocationManager,
+        didFailWithError error: any Error
+    ) {
         let isDenied = (error as? CLError)?.code == .denied
 
         Task { @MainActor [weak self] in

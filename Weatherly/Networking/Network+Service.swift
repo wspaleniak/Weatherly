@@ -32,7 +32,13 @@ extension Network {
 
     /// Performs location searches and retrieves weather forecasts from Open-Meteo.
     struct Service: Providing {
+        
+        // MARK: - Properties
+        
+        /// The URL session used to send API requests.
         private let session: URLSession
+        
+        // MARK: - Init
 
         /// Creates the service with the URL session used for requests.
         ///
@@ -40,6 +46,8 @@ extension Network {
         init(session: URLSession = .shared) {
             self.session = session
         }
+        
+        // MARK: - Methods
 
         /// Searches for cities matching the supplied name.
         ///

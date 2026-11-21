@@ -14,13 +14,21 @@ import SwiftData
 /// inserts, updates, and deletes.
 @MainActor
 struct SwiftDataService<Model: PersistentModel> {
+    
+    // MARK: - Properties
+    
+    /// The container's main context used to fetch and modify models.
     private let modelContext: ModelContext
+    
+    // MARK: - Init
 
     /// Creates a service that operates on the main context of the supplied container.
     /// - Parameter modelContainer: The container that stores the model data.
     init(modelContainer: ModelContainer) {
         self.modelContext = modelContainer.mainContext
     }
+    
+    // MARK: - Methods
 
     /// Fetches models matching the descriptor.
     /// - Parameter descriptor: The criteria and sort order for the fetch.

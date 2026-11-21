@@ -9,6 +9,9 @@ import Foundation
 
 /// Shared configuration values used by the app.
 enum AppConfig {
+    
+    // MARK: - URL
+    
     /// Base URLs for remote services.
     enum URL {
         /// The base URL for Open-Meteo's Geocoding API.

@@ -10,12 +10,17 @@ import SwiftData
 
 /// Registers the app's shared dependencies for FactoryKit injection.
 extension Container {
+    
+    // MARK: - Network
+    
     /// Creates the Open-Meteo service used to search for cities and load forecasts.
     var networkService: Factory<any Network.Providing> {
         self {
             Network.Service()
         }
     }
+    
+    // MARK: - Location
 
     /// Provides one location service shared by the app's consumers.
     ///
@@ -28,6 +33,8 @@ extension Container {
         }
         .cached
     }
+    
+    // MARK: - Database
 
     /// Provides SwiftData operations for persisted cities when the store is available.
     ///
