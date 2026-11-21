@@ -90,6 +90,7 @@ extension Network {
 // MARK: - Coding keys
 
 extension Network.Decoding.Weather.Current {
+    /// Maps current-condition properties to their Open-Meteo JSON keys.
     private enum CodingKeys: String, CodingKey {
         case time
         case temperature2M = "temperature_2m"
@@ -99,6 +100,7 @@ extension Network.Decoding.Weather.Current {
 }
 
 extension Network.Decoding.Weather.Hourly {
+    /// Maps hourly forecast properties to their Open-Meteo JSON keys.
     private enum CodingKeys: String, CodingKey {
         case time
         case temperature2M = "temperature_2m"
@@ -107,6 +109,7 @@ extension Network.Decoding.Weather.Hourly {
 }
 
 extension Network.Decoding.Weather.Daily {
+    /// Maps daily forecast properties to their Open-Meteo JSON keys.
     private enum CodingKeys: String, CodingKey {
         case time
         case temperature2MMax = "temperature_2m_max"

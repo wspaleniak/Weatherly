@@ -16,22 +16,37 @@ import Foundation
 /// The hub is isolated to the main actor to serialize subscriber registration,
 /// publication, and termination.
 ///
-/// - Note: The produced streams always contain optional elements. This lets the hub
-///   publish `nil` as a value while tracking separately whether it has published anything.
+/// The stream's element type is exactly `Element`. To represent an absent value,
+/// use an optional type as the generic argument, such as `AsyncStreamHub<MyValue?>`.
+/// The hub tracks whether it has published a value separately, so it can replay a
+/// published `nil` without confusing it with an empty hub.
 @MainActor
 final class AsyncStreamHub<Element: Sendable> {
-    private var continuations: [String: AsyncStream<Element?>.Continuation] = [:]
+    
+    // MARK: - Properties
+    
+    /// Active stream continuations keyed by their unique subscriber identifiers.
+    private var continuations: [String: AsyncStream<Element>.Continuation] = [:]
+
+    /// The most recently published element, if one has been published.
     private var latestElement: Element?
+
+    /// Distinguishes an unpublished hub from a hub whose latest optional element is `nil`.
     private var hasLatestElement = false
+    
+    // MARK: - Init
 
     /// Creates an empty stream hub.
     init() { }
+    
+    // MARK: - Methods
 
     /// Creates an independent asynchronous stream for a consumer.
     ///
     /// The hub registers the stream's continuation and removes it when iteration
     /// terminates. When `replayLatest` is `true`, the stream first receives the most
-    /// recently published element, including `nil`, if the hub has published a value.
+    /// recently published element, including a published `nil` when `Element` is
+    /// optional, if the hub has published a value.
     ///
     /// - Parameters:
     ///   - replayLatest: A Boolean value that indicates whether to yield the latest published element.
@@ -40,13 +55,13 @@ final class AsyncStreamHub<Element: Sendable> {
     /// - Returns: A new stream that receives future publications independently of other consumers.
     func makeStream(
         replayLatest: Bool = false,
-        bufferingPolicy: AsyncStream<Element?>.Continuation.BufferingPolicy = .bufferingNewest(1)
-    ) -> AsyncStream<Element?> {
+        bufferingPolicy: AsyncStream<Element>.Continuation.BufferingPolicy = .bufferingNewest(1)
+    ) -> AsyncStream<Element> {
         AsyncStream(bufferingPolicy: bufferingPolicy) { continuation in
             let id = UUID().uuidString
             continuations[id] = continuation
             
-            if replayLatest, hasLatestElement {
+            if replayLatest, let latestElement, hasLatestElement {
                 continuation.yield(latestElement)
             }
             continuation.onTermination = { [weak self] _ in
@@ -59,12 +74,11 @@ final class AsyncStreamHub<Element: Sendable> {
 
     /// Publishes an element to every active consumer and records it for optional replay.
     ///
-    /// The hub accepts `nil` as a published element. A later stream created with
-    /// `replayLatest` set to `true` receives that `nil` value if it was the latest
-    /// publication.
+    /// If `Element` is optional, pass `nil` to publish an absent value. The hub records
+    /// that value and can replay it to a later stream.
     ///
-    /// - Parameter element: The optional element to publish.
-    func yield(_ element: Element?) {
+    /// - Parameter element: The element to publish.
+    func yield(_ element: Element) {
         latestElement = element
         hasLatestElement = true
         continuations.values.forEach { $0.yield(element) }
@@ -73,12 +87,16 @@ final class AsyncStreamHub<Element: Sendable> {
     /// Finishes all active streams and removes their continuations.
     ///
     /// The hub retains its latest element, so a stream created afterward can still
-    /// receive that element when `replayLatest` is `true`.
+    /// receive that element when `replayLatest` is `true`. Finishing current streams
+    /// doesn't prevent the hub from creating or publishing to later streams.
     func finish() {
         continuations.values.forEach { $0.finish() }
         continuations.removeAll()
     }
 
+    /// Removes a subscriber after its asynchronous stream terminates.
+    ///
+    /// - Parameter id: The identifier assigned when the subscriber's stream was created.
     private func removeSubscriber(id: String) {
         continuations[id] = nil
     }
