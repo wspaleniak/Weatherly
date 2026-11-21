@@ -2,7 +2,7 @@
 //  AppConfig.swift
 //  Weatherly
 //
-//  Created by Codex on 20/11/2026.
+//  Created by Wojciech Spaleniak on 20/11/2026.
 //
 
 import Foundation

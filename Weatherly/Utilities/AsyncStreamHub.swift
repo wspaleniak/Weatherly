@@ -2,7 +2,7 @@
 //  AsyncStreamHub.swift
 //  Weatherly
 //
-//  Created by Codex on 21/11/2026.
+//  Created by Wojciech Spaleniak on 21/11/2026.
 //
 
 import Foundation
