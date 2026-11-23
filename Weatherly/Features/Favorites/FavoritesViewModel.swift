@@ -42,7 +42,9 @@ final class FavoritesViewModel {
     var state: State = .downloading
     var searchState: SearchState = .lastSearched([])
     var searchText = ""
-
+    var selectedFavoriteCity: City?
+    var selectedSearchCity: City?
+    
     @ObservationIgnored private var storedCities: [City] = []
     @ObservationIgnored private var favoritesTask: Task<Void, Never>?
     @ObservationIgnored private var searchTask: Task<Void, Never>?
@@ -131,7 +133,9 @@ extension FavoritesViewModel {
 
 extension FavoritesViewModel {
     func loadFavorites(withSpinner: Bool = false) {
-        let cities = storedCities.filter(\.isFavorite)
+        let cities = storedCities
+            .filter(\.isFavorite)
+            .sorted { $0.name < $1.name }
         guard !cities.isEmpty else {
             favoritesTask?.cancel()
             state = .downloaded([])
@@ -140,6 +144,8 @@ extension FavoritesViewModel {
         if withSpinner {
             state = .downloading
         }
+        selectedFavoriteCity = cities.first
+        
         favoritesTask?.cancel()
         favoritesTask = Task { @MainActor [weak self] in
             let citiesWithWeather = await withTaskGroup(

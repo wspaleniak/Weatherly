@@ -76,14 +76,21 @@ struct FavoritesView: View {
                 )
             }
             .navigationDestination(for: AppRouter.Screen.self) { _ in
-                DetailsView()
+                if let city = viewModel.selectedFavoriteCity {
+                    DetailsView(city: city, source: .push)
+                }
             }
         } detail: {
-            DetailsView()
+            if let city = viewModel.selectedFavoriteCity {
+                DetailsView(city: city, source: .push)
+            }
         }
         .navigationSplitViewStyle(.balanced)
         .background(background)
         .animation(nil, value: isSearchPresented)
+        .onChange(of: isSearchPresented) { _, _ in
+            viewModel.updateSearchText("")
+        }
         .onChange(of: router.stack) { oldValue, newValue in
             if !oldValue.isEmpty && newValue.isEmpty {
                 viewModel.refresh()
@@ -91,14 +98,14 @@ struct FavoritesView: View {
         }
         .onChange(of: router.presented) { oldValue, newValue in
             if oldValue != nil && newValue == nil {
+                viewModel.selectedSearchCity = nil
                 viewModel.refresh()
             }
         }
-        .onChange(of: isSearchPresented) { _, _ in
-            viewModel.updateSearchText("")
-        }
         .sheet(item: presentedBinding) { _ in
-            DetailsView()
+            if let city = viewModel.selectedSearchCity {
+                DetailsView(city: city, source: .modal)
+            }
         }
     }
 }
@@ -124,7 +131,10 @@ extension FavoritesView {
                 ForEach(cities) { city in
                     FavoritesRowView(
                         city: city,
-                        onTap: { router.push(.details) }
+                        onTap: {
+                            viewModel.selectedFavoriteCity = city.city
+                            router.push(.details)
+                        }
                     )
                 }
             }
@@ -147,6 +157,7 @@ extension FavoritesView {
                         SearchRowView(
                             city: city,
                             onTap: {
+                                viewModel.selectedSearchCity = city
                                 viewModel.record(city: city)
                                 router.present(.details)
                             }
@@ -171,6 +182,7 @@ extension FavoritesView {
                         SearchRowView(
                             city: city,
                             onTap: {
+                                viewModel.selectedSearchCity = city
                                 viewModel.record(city: city)
                                 router.present(.details)
                             }
