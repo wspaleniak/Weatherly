@@ -102,8 +102,20 @@ struct FavoritesView: View {
         .onChange(of: isSearchPresented) { _, _ in
             viewModel.updateSearchText("")
         }
+        .onChange(of: horizontalSizeClass) { _, sizeClass in
+            switch sizeClass {
+            case .some(.regular):
+                router.setStack([])
+            case .some(.compact):
+                if viewModel.selectedFavoriteCity != nil && router.stack.isEmpty {
+                    router.push(.details)
+                }
+            default:
+                break
+            }
+        }
         .onChange(of: router.stack) { oldValue, newValue in
-            if !oldValue.isEmpty && newValue.isEmpty {
+            if horizontalSizeClass == .compact, !oldValue.isEmpty, newValue.isEmpty {
                 viewModel.refresh()
             }
         }
@@ -252,9 +264,9 @@ extension FavoritesView {
     private var background: some View {
         LinearGradient(
             colors: [
-                Color.blue.opacity(0.75),
-                Color.blue.opacity(0.45),
-                Color.indigo.opacity(0.75)
+                Color.blue.opacity(0.8),
+                Color.blue.opacity(0.4),
+                Color.indigo.opacity(0.8)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing

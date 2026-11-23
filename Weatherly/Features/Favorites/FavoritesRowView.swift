@@ -27,7 +27,7 @@ struct FavoritesRowView: View {
             }
             .padding()
             .contentShape(.rect)
-            .background(background)
+            .liquidBackgroundIdNeeded(interactive: true)
         }
         .buttonStyle(.plain)
         .listRowSeparator(.hidden)
@@ -45,11 +45,18 @@ struct FavoritesRowView: View {
     
     private var cityAndTemperature: some View {
         HStack(alignment: .top) {
-            Text(city.city.name)
-                .lineLimit(1)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading) {
+                Text(city.city.name)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                if let country = city.city.country{
+                    Text(country)
+                        .font(.subheadline)
+                }
+            }
+            .lineLimit(1)
+            .frame(maxWidth: .infinity, alignment: .leading)
             
             if let weather = city.weather {
                 Text("\(Int(weather.current.temperature))°C")
@@ -64,12 +71,12 @@ struct FavoritesRowView: View {
             if let weather = city.weather {
                 HStack {
                     Image(systemName: weather.current.condition.systemImage)
-                        .font(.subheadline)
                     Text(weather.current.condition.localizedDescription)
                         .lineLimit(1)
-                        .font(.subheadline)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .font(.subheadline)
+                .fontWeight(.medium)
             }
             if let today = city.weather?.daily.first,
                let minTemperature = today.minimumTemperature,
@@ -82,16 +89,9 @@ struct FavoritesRowView: View {
                 }
                 .lineLimit(1)
                 .font(.subheadline)
+                .fontWeight(.medium)
                 .frame(alignment: .trailing)
             }
         }
-    }
-    
-    private var background: some View {
-        RoundedRectangle(
-            cornerRadius: 24.0,
-            style: .continuous
-        )
-        .fill(.ultraThinMaterial)
     }
 }
