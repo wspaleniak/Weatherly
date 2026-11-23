@@ -24,14 +24,14 @@ final class FavoritesViewModel {
     
     // MARK: - State
     
-    enum State {
+    enum State: Hashable, Sendable {
         case downloading
         case downloaded([CityWithWeather])
     }
     
     // MARK: - Search state
     
-    enum SearchState {
+    enum SearchState: Hashable, Sendable {
         case lastSearched([City])
         case downloaded([City])
         case error(String)
@@ -109,8 +109,6 @@ extension FavoritesViewModel {
             return
         }
         let searchedAt = Date()
-        var updatedCity = city
-        updatedCity.lastSearchedAt = searchedAt
         
         do {
             let cityID = city.id
@@ -120,9 +118,31 @@ extension FavoritesViewModel {
             if let savedCity = try service.fetch(descriptor).first {
                 savedCity.lastSearchedAt = searchedAt
             } else {
+                var updatedCity = city
+                updatedCity.lastSearchedAt = searchedAt
                 service.insert(.init(city: updatedCity, lastSearchedAt: searchedAt))
             }
             loadDatabase()
+        } catch {
+            return
+        }
+    }
+    
+    func remove(city: City) {
+        guard let service = cityDataService else {
+            return
+        }
+        do {
+            let cityID = city.id
+            let descriptor = FetchDescriptor<CityDataModel>(
+                predicate: #Predicate { $0.id == cityID }
+            )
+            guard let savedCity = try service.fetch(descriptor).first else {
+                return
+            }
+            savedCity.isFavorite = false
+            loadDatabase()
+            loadFavorites()
         } catch {
             return
         }
@@ -136,6 +156,9 @@ extension FavoritesViewModel {
         let cities = storedCities
             .filter(\.isFavorite)
             .sorted { $0.name < $1.name }
+        
+        selectedFavoriteCity = cities.first
+        
         guard !cities.isEmpty else {
             favoritesTask?.cancel()
             state = .downloaded([])
@@ -144,8 +167,6 @@ extension FavoritesViewModel {
         if withSpinner {
             state = .downloading
         }
-        selectedFavoriteCity = cities.first
-        
         favoritesTask?.cancel()
         favoritesTask = Task { @MainActor [weak self] in
             let citiesWithWeather = await withTaskGroup(

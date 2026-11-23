@@ -66,4 +66,24 @@ extension Weather.Condition {
              .heavyThunderstorm, .thunderstormWithHeavyHail: "Weather.Condition.thunderstorm"
         }
     }
+
+    /// The SF Symbols name that represents this weather condition.
+    var systemImage: String {
+        switch self {
+        case .unknown: "questionmark.circle"
+        case .clearSky, .mainlyClear: "sun.max.fill"
+        case .partlyCloudy: "cloud.sun.fill"
+        case .overcast: "cloud.fill"
+        case .fog, .depositingRimeFog: "cloud.fog.fill"
+        case .lightDrizzle, .moderateDrizzle, .denseDrizzle: "cloud.drizzle.fill"
+        case .lightFreezingDrizzle, .denseFreezingDrizzle,
+             .lightFreezingRain, .heavyFreezingRain: "cloud.sleet.fill"
+        case .slightRain, .moderateRain, .heavyRain,
+             .slightRainShowers, .moderateRainShowers, .violentRainShowers: "cloud.rain.fill"
+        case .slightSnowfall, .moderateSnowfall, .heavySnowfall,
+             .snowGrains, .slightSnowShowers, .heavySnowShowers: "cloud.snow.fill"
+        case .thunderstorm, .thunderstormWithSlightHail,
+             .heavyThunderstorm, .thunderstormWithHeavyHail: "cloud.bolt.rain.fill"
+        }
+    }
 }

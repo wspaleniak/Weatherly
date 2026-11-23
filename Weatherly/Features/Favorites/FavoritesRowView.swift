@@ -13,6 +13,7 @@ struct FavoritesRowView: View {
 
     let city: FavoritesViewModel.CityWithWeather
     let onTap: @MainActor () -> Void
+    let onRemove: @MainActor () -> Void
 
     // MARK: - Body
 
@@ -31,6 +32,13 @@ struct FavoritesRowView: View {
         .buttonStyle(.plain)
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
+        .swipeActions(edge: .trailing) {
+            Button(role: .destructive) {
+                onRemove()
+            } label: {
+                Image(systemName: "trash")
+            }
+        }
     }
     
     // MARK: - Subviews
@@ -54,15 +62,19 @@ struct FavoritesRowView: View {
     private var conditionAndTemperature: some View {
         HStack(alignment: .bottom) {
             if let weather = city.weather {
-                Text(weather.current.condition.localizedDescription)
-                    .lineLimit(1)
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack {
+                    Image(systemName: weather.current.condition.systemImage)
+                        .font(.subheadline)
+                    Text(weather.current.condition.localizedDescription)
+                        .lineLimit(1)
+                        .font(.subheadline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             if let today = city.weather?.daily.first,
                let minTemperature = today.minimumTemperature,
                let maxTemperature = today.maximumTemperature {
-                HStack(spacing: 2.0) {
+                HStack(spacing: 6.0) {
                     Text("Favorites.temperature.from")
                     Text("\(Int(minTemperature))°C")
                     Text("Favorites.temperature.to")

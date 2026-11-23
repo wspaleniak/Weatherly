@@ -15,7 +15,10 @@ struct FavoritesView: View {
     
     @InjectedObservable(\.appRouter)
     private var router
-    
+
+    @Environment(\.horizontalSizeClass)
+    private var horizontalSizeClass
+
     @Bindable
     var viewModel: FavoritesViewModel
 
@@ -56,7 +59,7 @@ struct FavoritesView: View {
     var body: some View {
         NavigationSplitView {
             NavigationStack(path: stackBinding) {
-                List {
+                Group {
                     if isSearchPresented {
                         searches
                     } else {
@@ -64,10 +67,9 @@ struct FavoritesView: View {
                     }
                 }
                 .listStyle(.plain)
+                .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
                 .background(background)
-                .navigationTitle(Text("Favorites.title"))
-                .navigationBarTitleDisplayMode(.large)
                 .searchable(
                     text: searchTextBinding,
                     isPresented: $isSearchPresented,
@@ -77,17 +79,26 @@ struct FavoritesView: View {
             }
             .navigationDestination(for: AppRouter.Screen.self) { _ in
                 if let city = viewModel.selectedFavoriteCity {
-                    DetailsView(city: city, source: .push)
+                    let viewModel = DetailsViewModel(
+                        city: city,
+                        source: .push
+                    )
+                    DetailsView(viewModel: viewModel)
                 }
             }
         } detail: {
             if let city = viewModel.selectedFavoriteCity {
-                DetailsView(city: city, source: .push)
+                let viewModel = DetailsViewModel(
+                    city: city,
+                    source: .push
+                )
+                DetailsView(viewModel: viewModel)
             }
         }
         .navigationSplitViewStyle(.balanced)
-        .background(background)
         .animation(nil, value: isSearchPresented)
+        .animation(.smooth, value: viewModel.state)
+        .animation(.smooth, value: viewModel.searchState)
         .onChange(of: isSearchPresented) { _, _ in
             viewModel.updateSearchText("")
         }
@@ -104,7 +115,13 @@ struct FavoritesView: View {
         }
         .sheet(item: presentedBinding) { _ in
             if let city = viewModel.selectedSearchCity {
-                DetailsView(city: city, source: .modal)
+                NavigationStack {
+                    let viewModel = DetailsViewModel(
+                        city: city,
+                        source: .modal { isSearchPresented = false }
+                    )
+                    DetailsView(viewModel: viewModel)
+                }
             }
         }
     }
@@ -120,6 +137,7 @@ extension FavoritesView {
             ProgressView {
                 Text("Favorites.loading")
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .downloaded(let cities):
             if cities.isEmpty {
                 unavailable(
@@ -128,12 +146,17 @@ extension FavoritesView {
                     description: "Favorites.empty.description"
                 )
             } else {
-                ForEach(cities) { city in
+                List(cities) { city in
                     FavoritesRowView(
                         city: city,
                         onTap: {
                             viewModel.selectedFavoriteCity = city.city
-                            router.push(.details)
+                            if horizontalSizeClass == .compact {
+                                router.push(.details)
+                            }
+                        },
+                        onRemove: {
+                            viewModel.remove(city: city.city)
                         }
                     )
                 }
@@ -152,21 +175,23 @@ extension FavoritesView {
                     description: "Search.recent.empty.description"
                 )
             } else {
-                Section {
-                    ForEach(cities) { city in
-                        SearchRowView(
-                            city: city,
-                            onTap: {
-                                viewModel.selectedSearchCity = city
-                                viewModel.record(city: city)
-                                router.present(.details)
-                            }
-                        )
+                List {
+                    Section {
+                        ForEach(cities) { city in
+                            SearchRowView(
+                                city: city,
+                                onTap: {
+                                    viewModel.selectedSearchCity = city
+                                    viewModel.record(city: city)
+                                    router.present(.details)
+                                }
+                            )
+                        }
+                    } header: {
+                        Text("Search.recent.section.title")
+                            .font(.subheadline)
+                            .textCase(.uppercase)
                     }
-                } header: {
-                    Text("Search.recent.section.title")
-                        .font(.subheadline)
-                        .textCase(.uppercase)
                 }
             }
         case .downloaded(let cities):
@@ -177,21 +202,23 @@ extension FavoritesView {
                     description: "Search.results.empty.description"
                 )
             } else {
-                Section {
-                    ForEach(cities) { city in
-                        SearchRowView(
-                            city: city,
-                            onTap: {
-                                viewModel.selectedSearchCity = city
-                                viewModel.record(city: city)
-                                router.present(.details)
-                            }
-                        )
+                List {
+                    Section {
+                        ForEach(cities) { city in
+                            SearchRowView(
+                                city: city,
+                                onTap: {
+                                    viewModel.selectedSearchCity = city
+                                    viewModel.record(city: city)
+                                    router.present(.details)
+                                }
+                            )
+                        }
+                    } header: {
+                        Text("Search.results.section.title")
+                            .font(.subheadline)
+                            .textCase(.uppercase)
                     }
-                } header: {
-                    Text("Search.results.section.title")
-                        .font(.subheadline)
-                        .textCase(.uppercase)
                 }
             }
         case .error:
