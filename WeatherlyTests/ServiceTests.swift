@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import Weatherly
 
+/// Verifies Open-Meteo search and forecast requests and response mapping.
 @Suite(.serialized)
 struct ServiceTests {
     @Test func `when search receives a query with whitespace it trims the query and maps cities`() async throws {

@@ -8,8 +8,8 @@
 import Foundation
 
 extension Network {
-    /// Builds HTTP requests, executes them with `URLSession.shared`, and converts
-    /// responses into typed values.
+    /// Builds HTTP requests, executes them with a supplied session or `URLSession.shared`,
+    /// and converts responses into typed values.
     ///
     /// Use the helper methods to construct a URL and request, fetch response data,
     /// validate the HTTP status, and decode a successful response.
@@ -197,7 +197,7 @@ extension Network {
 // MARK: - Error descriptions
 
 extension Network.HTTPClient.HTTPError {
-    /// A localized description of the error.
+    /// A user-facing description of the error in Polish.
     var errorDescription: String? {
         switch self {
         case .invalidURL:

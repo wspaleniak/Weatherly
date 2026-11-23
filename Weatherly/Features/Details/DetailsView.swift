@@ -8,19 +8,23 @@
 import FactoryKit
 import SwiftUI
 
+/// Presents current conditions and hourly and daily forecasts for one city.
 @MainActor
 struct DetailsView: View {
     
     // MARK: - Properties
     
+    /// The router used to dismiss the modal details screen.
     @InjectedObservable(\.appRouter)
     private var router
     
+    /// Supplies the selected city, forecast state, and favorite action.
     @Bindable
     var viewModel: DetailsViewModel
     
     // MARK: - Body
     
+    /// Displays the forecast state and configures modal controls when appropriate.
     var body: some View {
         Group {
             switch viewModel.state {
@@ -89,6 +93,7 @@ struct DetailsView: View {
 // MARK: - Subviews
 
 extension DetailsView {
+    /// Shows the current temperature, condition, and daily temperature range.
     private func currentWeather(_ weather: Weather) -> some View {
         VStack(spacing: 12.0) {
             Text(viewModel.city.name)
@@ -123,6 +128,7 @@ extension DetailsView {
         .liquidBackgroundIdNeeded()
     }
     
+    /// Shows temperature and precipitation-probability values for the next 24 hours.
     private func hourlyWeather(_ weather: Weather) -> some View {
         VStack(alignment: .leading) {
             Text("Details.hourly.title")
@@ -162,6 +168,7 @@ extension DetailsView {
         .liquidBackgroundIdNeeded()
     }
     
+    /// Shows the daily forecast as a vertical list.
     private func dailyWeather(_ weather: Weather) -> some View {
         VStack(alignment: .leading, spacing: 12.0) {
             Text("Details.daily.title")
@@ -209,6 +216,12 @@ extension DetailsView {
         .liquidBackgroundIdNeeded()
     }
     
+    /// Builds an unavailable-content message for a failed forecast request.
+    ///
+    /// - Parameters:
+    ///   - image: The SF Symbol shown with the message.
+    ///   - title: The localized title for the unavailable state.
+    ///   - description: The localized explanation for the unavailable state.
     private func unavailable(
         image: String,
         title: LocalizedStringResource,
@@ -228,6 +241,7 @@ extension DetailsView {
         .listRowBackground(Color.clear)
     }
 
+    /// The gradient displayed behind the forecast cards.
     private var background: some View {
         LinearGradient(
             colors: [

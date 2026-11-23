@@ -7,16 +7,21 @@
 
 import SwiftUI
 
+/// Displays one favorite city with its current conditions and a swipe-to-remove action.
 struct FavoritesRowView: View {
 
     // MARK: - Properties
 
+    /// The favorite city and its forecast, when available.
     let city: FavoritesViewModel.CityWithWeather
+    /// Runs when the user selects the row.
     let onTap: @MainActor () -> Void
+    /// Runs when the user confirms the trailing swipe action.
     let onRemove: @MainActor () -> Void
 
     // MARK: - Body
 
+    /// Builds the tappable weather card and its destructive swipe action.
     var body: some View {
         Button {
             onTap()
@@ -43,6 +48,7 @@ struct FavoritesRowView: View {
     
     // MARK: - Subviews
     
+    /// Shows the city name, country, and current temperature when available.
     private var cityAndTemperature: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
@@ -66,6 +72,7 @@ struct FavoritesRowView: View {
         }
     }
     
+    /// Shows the current condition and today's minimum and maximum temperatures.
     private var conditionAndTemperature: some View {
         HStack(alignment: .bottom) {
             if let weather = city.weather {

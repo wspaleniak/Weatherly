@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import Weatherly
 
+/// Verifies independent subscriptions, latest-value replay, and stream completion.
 @MainActor
 struct AsyncStreamHubTests {
     @Test func `when multiple streams subscribe each receives every published element`() async {

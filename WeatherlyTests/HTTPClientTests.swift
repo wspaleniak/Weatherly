@@ -2,6 +2,7 @@ import Foundation
 import Testing
 @testable import Weatherly
 
+/// Verifies HTTP client URL construction.
 struct HTTPClientTests {
     @Test func `when make URL receives a base URL and path it returns the combined URL`() throws {
         let url = try Network.HTTPClient.makeURL(

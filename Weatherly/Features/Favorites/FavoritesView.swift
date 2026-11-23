@@ -8,25 +8,34 @@
 import FactoryKit
 import SwiftUI
 
+/// Shows favorite cities, recent searches, and search results.
+///
+/// Compact layouts push favorite details, while regular layouts show the selected
+/// city in the split view's detail column.
 @MainActor
 struct FavoritesView: View {
     
     // MARK: - Properties
     
+    /// The shared router for push and modal navigation.
     @InjectedObservable(\.appRouter)
     private var router
 
+    /// The horizontal size class used to adapt split-view navigation.
     @Environment(\.horizontalSizeClass)
     private var horizontalSizeClass
 
+    /// Supplies favorite, search, and persistence state to the view.
     @Bindable
     var viewModel: FavoritesViewModel
 
+    /// Indicates whether the native search interface is active.
     @State
     private var isSearchPresented = false
     
     // MARK: - Bindings
     
+    /// Connects the navigation stack path to the shared router.
     private var stackBinding: Binding<[AppRouter.Screen]> {
         Binding(
             get: { router.stack },
@@ -34,6 +43,7 @@ struct FavoritesView: View {
         )
     }
     
+    /// Connects modal presentation to the shared router.
     private var presentedBinding: Binding<AppRouter.Screen?> {
         Binding(
             get: { router.presented },
@@ -47,6 +57,7 @@ struct FavoritesView: View {
         )
     }
     
+    /// Forwards native search-field edits to the view model's input validation.
     private var searchTextBinding: Binding<String> {
         Binding(
             get: { viewModel.searchText },
@@ -56,6 +67,7 @@ struct FavoritesView: View {
     
     // MARK: - Body
     
+    /// Builds the split navigation layout and presents modal search details.
     var body: some View {
         NavigationSplitView {
             NavigationStack(path: stackBinding) {
@@ -142,6 +154,7 @@ struct FavoritesView: View {
 // MARK: - Subviews
 
 extension FavoritesView {
+    /// Displays the loading state, empty state, or persisted favorite cities.
     @ViewBuilder
     private var favorites: some View {
         switch viewModel.state {
@@ -176,6 +189,7 @@ extension FavoritesView {
         }
     }
     
+    /// Displays recent searches, network results, empty results, or a search error.
     @ViewBuilder
     private var searches: some View {
         switch viewModel.searchState {
@@ -242,6 +256,12 @@ extension FavoritesView {
         }
     }
     
+    /// Builds an unavailable-content message with the supplied symbol and localized text.
+    ///
+    /// - Parameters:
+    ///   - image: The SF Symbol shown with the message.
+    ///   - title: The localized title for the unavailable state.
+    ///   - description: The localized explanation for the unavailable state.
     private func unavailable(
         image: String,
         title: LocalizedStringResource,
@@ -261,6 +281,7 @@ extension FavoritesView {
         .listRowBackground(Color.clear)
     }
     
+    /// The gradient displayed behind the favorites and search lists.
     private var background: some View {
         LinearGradient(
             colors: [

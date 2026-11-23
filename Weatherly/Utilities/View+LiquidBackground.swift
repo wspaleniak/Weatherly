@@ -8,7 +8,9 @@
 import SwiftUI
 
 extension View {
-    /// Applies an interactive Liquid Glass background when available and uses a material fallback otherwise.
+    /// Applies a Liquid Glass background when available and a material fallback otherwise.
+    ///
+    /// - Parameter interactive: Whether the glass responds to touch and pointer interactions.
     @ViewBuilder
     func liquidBackgroundIdNeeded(interactive: Bool = false) -> some View {
         if #available(iOS 26.0, *) {

@@ -10,9 +10,11 @@ import SwiftUI
 @MainActor
 @main
 struct WeatherlyApp: App {
-    private let favoritesViewModel = FavoritesViewModel()
     
-    // MARK: - Init
+    // MARK: - Properties
+    
+    /// The view model shared by the root favorites screen.
+    private let favoritesViewModel = FavoritesViewModel()
     
     // MARK: - Body
     
