@@ -2,6 +2,20 @@
 
 Weatherly is an iOS weather app built with SwiftUI. It lets you search for cities around the world, save favorites, revisit recent searches, and view current conditions and forecasts.
 
+### Screenshots
+
+<p align="center">
+  <img src="Screenshots/favorites-portrait.png" width="160" alt="Favorites screen in portrait orientation" />
+  <img src="Screenshots/details-modal-paris-portrait-1.png" width="160" alt="Paris weather details presented modally in portrait orientation" />
+  <img src="Screenshots/details-modal-paris-portrait-2.png" width="160" alt="Paris weather details with hourly and seven-day forecasts" />
+  <img src="Screenshots/details-push-berlin-portrait.png" width="160" alt="Berlin weather details opened from favorites in portrait orientation" />
+</p>
+
+<p align="center">
+  <img src="Screenshots/favorites-split-landscape.png" width="440" alt="Favorites and weather details in split view in landscape orientation" />
+  <img src="Screenshots/search-split-landscape.png" width="440" alt="Recent city search and weather details in split view in landscape orientation" />
+</p>
+
 ## Features
 
 - Search worldwide city results with validation for letters, Polish characters, spaces, and hyphens.
