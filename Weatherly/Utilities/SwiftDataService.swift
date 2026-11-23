@@ -7,25 +7,26 @@
 
 import SwiftData
 
-/// Provides generic operations for one SwiftData model type.
+/// Provides fetch, insertion, and deletion operations for one SwiftData model type.
 ///
-/// The service uses the container's main context and doesn't keep a separate
-/// in-memory copy of fetched models. The main context automatically saves pending
+/// The service retains its model container and uses the container's main context
+/// for every operation. It doesn't keep a separate cache of fetched models. The
+/// main context tracks changes to fetched models and automatically saves pending
 /// inserts, updates, and deletes.
 @MainActor
 struct SwiftDataService<Model: PersistentModel> {
     
     // MARK: - Properties
     
-    /// The container's main context used to fetch and modify models.
-    private let modelContext: ModelContext
+    /// The retained container whose main context performs this service's operations.
+    private let modelContainer: ModelContainer
     
     // MARK: - Init
 
-    /// Creates a service that operates on the main context of the supplied container.
-    /// - Parameter modelContainer: The container that stores the model data.
+    /// Creates a service that retains the container used for its operations.
+    /// - Parameter modelContainer: The container whose main context manages the models.
     init(modelContainer: ModelContainer) {
-        self.modelContext = modelContainer.mainContext
+        self.modelContainer = modelContainer
     }
     
     // MARK: - Methods
@@ -37,18 +38,18 @@ struct SwiftDataService<Model: PersistentModel> {
     func fetch(
         _ descriptor: FetchDescriptor<Model> = FetchDescriptor<Model>()
     ) throws -> [Model] {
-        try modelContext.fetch(descriptor)
+        try modelContainer.mainContext.fetch(descriptor)
     }
 
     /// Registers a model for insertion into the context.
     /// - Parameter model: The model to insert.
     func insert(_ model: Model) {
-        modelContext.insert(model)
+        modelContainer.mainContext.insert(model)
     }
 
     /// Registers a model for deletion from the context.
     /// - Parameter model: The model to delete.
     func delete(_ model: Model) {
-        modelContext.delete(model)
+        modelContainer.mainContext.delete(model)
     }
 }

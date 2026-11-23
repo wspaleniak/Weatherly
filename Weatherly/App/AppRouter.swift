@@ -21,6 +21,9 @@ final class AppRouter {
     struct Screen: Identifiable, Hashable, Sendable {
         /// The identifier used by the app to resolve the destination.
         let id: String
+
+        /// Identifies the city weather screen.
+        static let details = Screen(id: "details")
     }
     
     // MARK: - Properties

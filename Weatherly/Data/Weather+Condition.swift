@@ -42,3 +42,28 @@ extension Weather {
         case thunderstormWithHeavyHail = 99
     }
 }
+
+// MARK: - Description
+
+extension Weather.Condition {
+    /// A localized description of this weather condition.
+    var localizedDescription: LocalizedStringResource {
+        switch self {
+        case .unknown: "Weather.Condition.unknown"
+        case .clearSky: "Weather.Condition.clearSky"
+        case .mainlyClear: "Weather.Condition.mainlyClear"
+        case .partlyCloudy: "Weather.Condition.partlyCloudy"
+        case .overcast: "Weather.Condition.overcast"
+        case .fog, .depositingRimeFog: "Weather.Condition.fog"
+        case .lightDrizzle, .moderateDrizzle, .denseDrizzle: "Weather.Condition.drizzle"
+        case .lightFreezingDrizzle, .denseFreezingDrizzle: "Weather.Condition.freezingDrizzle"
+        case .slightRain, .moderateRain, .heavyRain: "Weather.Condition.rain"
+        case .lightFreezingRain, .heavyFreezingRain: "Weather.Condition.freezingRain"
+        case .slightSnowfall, .moderateSnowfall, .heavySnowfall, .snowGrains: "Weather.Condition.snow"
+        case .slightRainShowers, .moderateRainShowers, .violentRainShowers: "Weather.Condition.rainShowers"
+        case .slightSnowShowers, .heavySnowShowers: "Weather.Condition.snowShowers"
+        case .thunderstorm, .thunderstormWithSlightHail,
+             .heavyThunderstorm, .thunderstormWithHeavyHail: "Weather.Condition.thunderstorm"
+        }
+    }
+}

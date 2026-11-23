@@ -10,6 +10,17 @@ import SwiftData
 
 /// Registers the app's shared dependencies for FactoryKit injection.
 extension Container {
+
+    // MARK: - Router
+
+    /// Provides the app-wide navigation state shared by its views.
+    @MainActor
+    var appRouter: Factory<AppRouter> {
+        self {
+            AppRouter()
+        }
+        .singleton
+    }
     
     // MARK: - Network
     

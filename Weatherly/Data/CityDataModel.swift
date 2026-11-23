@@ -26,11 +26,11 @@ final class CityDataModel {
     /// Whether the city is included in the user's favorites.
     var isFavorite: Bool
     /// The most recent time the user selected this city from search results.
-    var lastSearchedAt: Date?
+    var lastSearchedAt: Date
     
     /// Creates a persisted city from the app's city value.
     /// - Parameter city: The city whose data and local state should be stored.
-    init(city: City) {
+    init(city: City, lastSearchedAt: Date) {
         self.id = city.id
         self.name = city.name
         self.latitude = city.coordinates.latitude
@@ -38,6 +38,6 @@ final class CityDataModel {
         self.country = city.country
         self.administrativeArea = city.administrativeArea
         self.isFavorite = city.isFavorite
-        self.lastSearchedAt = city.lastSearchedAt
+        self.lastSearchedAt = lastSearchedAt
     }
 }
