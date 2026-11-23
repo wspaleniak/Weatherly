@@ -12,6 +12,12 @@ import SwiftUI
 @MainActor
 struct DetailsView: View {
     
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let hourlyCardSize: CGSize = .init(width: 66.0, height: 112.0)
+    }
+    
     // MARK: - Properties
     
     /// The router used to dismiss the modal details screen.
@@ -34,7 +40,7 @@ struct DetailsView: View {
                 }
             case .downloaded(let weather):
                 ScrollView {
-                    VStack {
+                    VStack(spacing: AppConfig.Spacing.spacing_1) {
                         currentWeather(weather)
                         hourlyWeather(weather)
                         dailyWeather(weather)
@@ -95,16 +101,16 @@ struct DetailsView: View {
 extension DetailsView {
     /// Shows the current temperature, condition, and daily temperature range.
     private func currentWeather(_ weather: Weather) -> some View {
-        VStack(spacing: 12.0) {
+        VStack(spacing: AppConfig.Spacing.spacing_1) {
             Text(viewModel.city.name)
                 .lineLimit(1)
                 .font(.largeTitle)
             
             HStack {
                 Image(systemName: weather.current.condition.systemImage)
-                    .font(.system(size: 40, weight: .regular))
+                    .font(.system(size: AppConfig.Size.medium, weight: .regular))
                 Text("\(Int(weather.current.temperature))°C")
-                    .font(.system(size: 64, weight: .light))
+                    .font(.system(size: AppConfig.Size.large, weight: .light))
             }
             
             Text(weather.current.condition.localizedDescription)
@@ -113,7 +119,7 @@ extension DetailsView {
             if let today = weather.daily.first,
                let minTemperature = today.minimumTemperature,
                let maxTemperature = today.maximumTemperature {
-                HStack(spacing: 6.0) {
+                HStack(spacing: AppConfig.Spacing.spacing_05) {
                     Text("Favorites.temperature.from")
                     Text("\(Int(minTemperature))°C")
                     Text("Favorites.temperature.to")
@@ -137,7 +143,7 @@ extension DetailsView {
             ScrollView(.horizontal) {
                 HStack {
                     ForEach(weather.hourly, id: \.time) { hour in
-                        VStack(spacing: 12) {
+                        VStack(spacing: AppConfig.Spacing.spacing_1) {
                             Text(hour.time.hourLabel)
                                 .font(.subheadline)
                             
@@ -147,7 +153,7 @@ extension DetailsView {
                                     .fontWeight(.semibold)
                             }
                             if let probability = hour.precipitationProbability {
-                                HStack(spacing: 4.0) {
+                                HStack(spacing: AppConfig.Spacing.spacing_05) {
                                     Image(systemName: "drop.fill")
                                         .font(.caption)
                                     Text("\(Int(probability))%")
@@ -156,7 +162,10 @@ extension DetailsView {
                                 .foregroundStyle(.cyan)
                             }
                         }
-                        .frame(width: 66, height: 112)
+                        .frame(
+                            width: Constants.hourlyCardSize.width,
+                            height: Constants.hourlyCardSize.height
+                        )
                         .liquidBackgroundIdNeeded()
                     }
                 }
@@ -170,23 +179,23 @@ extension DetailsView {
     
     /// Shows the daily forecast as a vertical list.
     private func dailyWeather(_ weather: Weather) -> some View {
-        VStack(alignment: .leading, spacing: 12.0) {
+        VStack(alignment: .leading, spacing: AppConfig.Spacing.spacing_1) {
             Text("Details.daily.title")
                 .font(.headline)
             
-            VStack(spacing: 12.0) {
+            VStack(spacing: AppConfig.Spacing.spacing_1) {
                 ForEach(weather.daily, id: \.time) { day in
                     HStack {
                         Text(day.time.dateLabel(timezone: weather.timezone).capitalized)
                             .lineLimit(1)
-                            .frame(width: 64.0, alignment: .leading)
+                            .frame(width: AppConfig.Size.large, alignment: .leading)
                         
                         Image(systemName: day.condition.systemImage)
                             .font(.title3)
-                            .frame(width: 32.0)
+                            .frame(width: AppConfig.Size.small)
                         
                         if let probability = day.maximumPrecipitationProbability {
-                            HStack(spacing: 4.0) {
+                            HStack(spacing: AppConfig.Spacing.spacing_05) {
                                 Image(systemName: "drop.fill")
                                     .font(.caption)
                                 Text("\(Int(probability))%")
@@ -199,11 +208,11 @@ extension DetailsView {
                         if let minTemperature = day.minimumTemperature {
                             Text("\(Int(minTemperature))°")
                                 .foregroundStyle(.secondary)
-                                .frame(width: 32.0, alignment: .trailing)
+                                .frame(width: AppConfig.Size.small, alignment: .trailing)
                         }
                         if let maxTemperature = day.maximumTemperature {
                             Text("\(Int(maxTemperature))°")
-                                .frame(width: 32.0, alignment: .trailing)
+                                .frame(width: AppConfig.Size.small, alignment: .trailing)
                         }
                     }
                     .font(.subheadline)

@@ -6,9 +6,9 @@ Weatherly is an iOS weather app built with SwiftUI. It lets you search for citie
 
 <p align="center">
   <img src="Screenshots/favorites-portrait.png" width="160" alt="Favorites screen in portrait orientation" />
-  <img src="Screenshots/details-modal-paris-portrait-1.png" width="160" alt="Paris weather details presented modally in portrait orientation" />
-  <img src="Screenshots/details-modal-paris-portrait-2.png" width="160" alt="Paris weather details with hourly and seven-day forecasts" />
   <img src="Screenshots/details-push-berlin-portrait.png" width="160" alt="Berlin weather details opened from favorites in portrait orientation" />
+  <img src="Screenshots/details-modal-paris-portrait.png" width="160" alt="Paris weather details presented modally with hourly and seven-day forecasts" />
+  <img src="Screenshots/search-recent-portrait.png" width="160" alt="Recent city searches in portrait orientation" />
 </p>
 
 <p align="center">

@@ -81,6 +81,7 @@ struct FavoritesView: View {
                 .listStyle(.plain)
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
+                .navigationBarTitleDisplayMode(.inline)
                 .background(background)
                 .searchable(
                     text: searchTextBinding,

@@ -26,7 +26,7 @@ struct FavoritesRowView: View {
         Button {
             onTap()
         } label: {
-            VStack(alignment: .leading, spacing: 16.0) {
+            VStack(alignment: .leading, spacing: AppConfig.Spacing.spacing_1) {
                 cityAndTemperature
                 conditionAndTemperature
             }
@@ -66,7 +66,7 @@ struct FavoritesRowView: View {
             
             if let weather = city.weather {
                 Text("\(Int(weather.current.temperature))°C")
-                    .font(.system(size: 48.0, weight: .light))
+                    .font(.system(size: AppConfig.Size.medium, weight: .light))
                     .frame(alignment: .trailing)
             }
         }
@@ -88,7 +88,7 @@ struct FavoritesRowView: View {
             if let today = city.weather?.daily.first,
                let minTemperature = today.minimumTemperature,
                let maxTemperature = today.maximumTemperature {
-                HStack(spacing: 6.0) {
+                HStack(spacing: AppConfig.Spacing.spacing_05) {
                     Text("Favorites.temperature.from")
                     Text("\(Int(minTemperature))°C")
                     Text("Favorites.temperature.to")
