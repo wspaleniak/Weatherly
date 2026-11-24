@@ -4,19 +4,18 @@ Weatherly is an iOS weather app built with SwiftUI. It lets you search for citie
 
 ### Screenshots
 
-<p align="center">
-  <img src="Screenshots/favorites-portrait.png" width="160" alt="Favorites screen in portrait orientation" />
-  <img src="Screenshots/search-recent-portrait.png" width="160" alt="Recent city searches in portrait orientation" />
-  <img src="Screenshots/details-modal-paris-portrait.png" width="160" alt="Paris weather details presented modally with hourly and seven-day forecasts" />
-  <img src="Screenshots/details-push-warsaw-portrait.png" width="160" alt="Warsaw weather details opened from favorites in portrait orientation" />
-</p>
-
 <table align="center">
+  <tr>
+    <td><img src="Screenshots/favorites-portrait.png" width="160" alt="Favorites screen in portrait orientation" /></td>
+    <td><img src="Screenshots/search-recent-portrait.png" width="160" alt="Recent city searches in portrait orientation" /></td>
+    <td><img src="Screenshots/details-modal-paris-portrait.png" width="160" alt="Paris weather details presented modally with hourly and seven-day forecasts" /></td>
+    <td><img src="Screenshots/details-push-warsaw-portrait.png" width="160" alt="Warsaw weather details opened from favorites in portrait orientation" /></td>
+  </tr>
   <tr>
     <td valign="middle">
       <img src="Screenshots/launch-screen-portrait.png" width="220" alt="Black launch screen with the Weatherly icon centered" />
     </td>
-    <td>
+    <td colspan="3">
       <p><img src="Screenshots/favorites-split-landscape.png" width="430" alt="Favorites and weather details in split view in landscape orientation" /></p>
       <p><img src="Screenshots/search-split-landscape.png" width="430" alt="Recent city search and weather details in split view in landscape orientation" /></p>
     </td>
