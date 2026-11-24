@@ -5,17 +5,26 @@ settings:
     DEVELOPMENT_TEAM: N9SPXNXF4B
     SWIFT_VERSION: 6.0
     IPHONEOS_DEPLOYMENT_TARGET: 17.0
+packages:
+  Factory:
+    url: https://github.com/hmlongco/Factory.git
+    from: 3.5.0
 targets:
   Weatherly:
     type: application
     platform: iOS
     sources:
       - path: Weatherly
+    dependencies:
+      - package: Factory
+        product: FactoryKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: pl.wspaleniak.Weatherly
         INFOPLIST_KEY_CFBundleDisplayName: Weatherly
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.weather
+        INFOPLIST_KEY_NSLocationWhenInUseUsageDescription: Weatherly uses your location to show local weather.
+        INFOPLIST_KEY_UILaunchStoryboardName: LaunchScreen
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: YES
@@ -25,4 +34,31 @@ targets:
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
         SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        STRING_CATALOG_GENERATE_SYMBOLS: YES
+  WeatherlyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: WeatherlyTests
+    dependencies:
+      - target: Weatherly
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: pl.wspaleniak.WeatherlyTests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: 1
+        SUPPORTED_PLATFORMS: iphoneos iphonesimulator
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+schemes:
+  Weatherly:
+    build:
+      targets:
+        Weatherly: all
+    test:
+      targets:
+        - WeatherlyTests
         
