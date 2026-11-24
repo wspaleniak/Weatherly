@@ -21,6 +21,9 @@ struct WeatherlyApp: App {
     var body: some Scene {
         WindowGroup {
             FavoritesView(viewModel: favoritesViewModel)
+                .onAppear {
+                    UISearchTextField.appearance().tintColor = .label
+                }
         }
     }
 }
